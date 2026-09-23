@@ -1,0 +1,802 @@
+<title>SFN Performance Label</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root{
+    --paper:#F6F2E8;
+    --paper-2:#EFE9DA;
+    --card:#FFFFFF;
+    --ink:#17160F;
+    --ink-soft:#4A4739;
+    --muted:#8A8672;
+    --line:rgba(23,22,15,0.14);
+    --line-strong:#17160F;
+    --volt:#D8FF3E;
+    --volt-ink:#17160F;
+    --flame:#FF4A26;
+    --flame-ink:#FFFFFF;
+    --shadow: 0 1px 0 rgba(23,22,15,0.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#161509;
+      --paper-2:#1E1C10;
+      --card:#211F13;
+      --ink:#F6F2E8;
+      --ink-soft:#CFC9B4;
+      --muted:#8C876E;
+      --line:rgba(246,242,232,0.14);
+      --line-strong:#F6F2E8;
+      --volt:#D8FF3E;
+      --volt-ink:#17160F;
+      --flame:#FF5C3A;
+      --flame-ink:#17160F;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#161509;
+    --paper-2:#1E1C10;
+    --card:#211F13;
+    --ink:#F6F2E8;
+    --ink-soft:#CFC9B4;
+    --muted:#8C876E;
+    --line:rgba(246,242,232,0.14);
+    --line-strong:#F6F2E8;
+    --volt:#D8FF3E;
+    --volt-ink:#17160F;
+    --flame:#FF5C3A;
+    --flame-ink:#17160F;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Manrope',ui-sans-serif,system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .font-display{ font-family:'Big Shoulders Display',ui-sans-serif,sans-serif; }
+  .font-mono{ font-family:'JetBrains Mono',ui-monospace,monospace; }
+  h1,h2,h3{ text-wrap:balance; }
+  .rule{ border-color:var(--line-strong); }
+  .hairline{ border-color:var(--line); }
+
+  /* ---------- marquee ---------- */
+  .marquee-track{ display:flex; width:max-content; animation:marquee 26s linear infinite; }
+  @keyframes marquee{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+
+  /* ---------- entrance reveal ---------- */
+  .reveal{ opacity:1; transform:none; }
+  .reveal.pre{ opacity:0; transform:translateY(18px); }
+  .reveal.go{ opacity:1; transform:translateY(0); transition:opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); }
+
+  /* hero word flip, plays automatically on load, no JS dependency for visibility */
+  .flip-line{ overflow:hidden; display:block; }
+  .flip-inner{ display:block; animation:flipUp .8s cubic-bezier(.16,1,.3,1) both; }
+  .flip-inner.d1{ animation-delay:.05s; }
+  .flip-inner.d2{ animation-delay:.16s; }
+  .flip-inner.d3{ animation-delay:.27s; }
+  @keyframes flipUp{ from{ transform:translateY(110%); } to{ transform:translateY(0); } }
+
+  /* ---------- nav ---------- */
+  #site-nav{ transition:transform .4s cubic-bezier(.16,1,.3,1), background-color .3s ease, border-color .3s ease; }
+  #site-nav.hide{ transform:translateY(-100%); }
+  #site-nav.blurred{ backdrop-filter:blur(14px) saturate(140%); background-color:color-mix(in srgb, var(--paper) 82%, transparent); }
+
+  /* ---------- buttons ---------- */
+  .btn-volt{ background:var(--volt); color:var(--volt-ink); transition:transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s ease; }
+  .btn-volt:hover{ transform:translateY(-2px); box-shadow:0 10px 24px -10px rgba(216,255,62,0.55); }
+  .btn-volt:active{ transform:translateY(0); }
+  .btn-ghost{ border:1.5px solid var(--line-strong); color:var(--ink); transition:background-color .3s ease, color .3s ease; }
+  .btn-ghost:hover{ background:var(--ink); color:var(--paper); }
+
+  /* ---------- category pills ---------- */
+  .cat-pill{ border:1.5px solid var(--line-strong); transition:transform .3s cubic-bezier(.16,1,.3,1), background-color .3s ease, color .3s ease; }
+  .cat-pill:hover{ transform:translateY(-3px); background:var(--ink); color:var(--paper); }
+
+  /* ---------- product card ---------- */
+  .p-card{ background:var(--card); border:1px solid var(--line); transition:transform .45s cubic-bezier(.16,1,.3,1), box-shadow .45s ease, border-color .3s ease; }
+  .p-card:hover{ transform:translateY(-6px); box-shadow:0 24px 40px -22px rgba(23,22,15,0.35); border-color:var(--line-strong); }
+  .p-media{ position:relative; overflow:hidden; }
+  .p-glyph{ transition:transform .6s cubic-bezier(.16,1,.3,1); }
+  .p-card:hover .p-glyph{ transform:scale(1.06) rotate(-1.5deg); }
+  .nutri-panel{ position:absolute; inset:0; background:color-mix(in srgb, var(--ink) 94%, transparent); color:var(--paper); transform:translateY(100%); transition:transform .45s cubic-bezier(.16,1,.3,1); }
+  .p-card:hover .nutri-panel{ transform:translateY(0); }
+  .swatch{ transition:transform .2s ease, box-shadow .2s ease; }
+  .swatch:hover{ transform:scale(1.15); }
+  .swatch[aria-checked="true"]{ box-shadow:0 0 0 2px var(--paper), 0 0 0 3.5px var(--ink); }
+  .size-pill[aria-checked="true"]{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
+
+  .add-btn{ position:relative; overflow:hidden; }
+  .add-btn .lbl,.add-btn .spin,.add-btn .ok{ transition:opacity .2s ease, transform .2s ease; }
+  .add-btn .spin,.add-btn .ok{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:0; }
+  .add-btn.loading .lbl{ opacity:0; }
+  .add-btn.loading .spin{ opacity:1; }
+  .add-btn.done .lbl{ opacity:0; }
+  .add-btn.done .ok{ opacity:1; }
+  .spinner{ width:16px; height:16px; border-radius:50%; border:2px solid color-mix(in srgb, var(--volt-ink) 25%, transparent); border-top-color:var(--volt-ink); animation:spin .7s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  /* ---------- cart drawer ---------- */
+  #overlay{ background:rgba(23,22,15,.5); opacity:0; pointer-events:none; transition:opacity .35s ease; }
+  #overlay.open{ opacity:1; pointer-events:auto; }
+  #drawer{ transform:translateX(100%); transition:transform .5s cubic-bezier(.16,1,.3,1); }
+  #drawer.open{ transform:translateX(0); }
+  #ship-fill{ transition:width .6s cubic-bezier(.16,1,.3,1); }
+  #cart-count{ transition:transform .3s cubic-bezier(.16,1,.3,1); }
+  #cart-count.bump{ transform:scale(1.35); }
+
+  .trust-icon{ transition:transform .4s cubic-bezier(.16,1,.3,1); }
+  .trust-item:hover .trust-icon{ transform:translateY(-3px); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.001ms !important; transition-duration:.001ms !important; }
+  }
+</style>
+
+<script>
+  tailwind.config = {
+    theme:{
+      extend:{
+        colors:{ paper:'var(--paper)', paper2:'var(--paper-2)', card:'var(--card)', ink:'var(--ink)', inksoft:'var(--ink-soft)', muted:'var(--muted)', line:'var(--line)', volt:'var(--volt)', flame:'var(--flame)' }
+      }
+    }
+  }
+</script>
+
+<!-- ====================== ANNOUNCEMENT BAR ====================== -->
+<div class="hairline border-b" style="background:var(--ink); color:var(--paper);">
+  <div class="overflow-hidden py-2">
+    <div class="marquee-track font-mono text-[11px] tracking-[0.14em] uppercase">
+      <span class="flex items-center gap-10 pr-10">
+        <span>Envíos gratis 24–48h con MRW &gt; €30</span>
+        <span style="color:var(--volt)">·</span>
+        <span>Pago 100% seguro · Visa, Bizum, PayPal</span>
+        <span style="color:var(--volt)">·</span>
+        <span>Tienda física en Terrassa, Barcelona</span>
+        <span style="color:var(--volt)">·</span>
+        <span>+15.000 reseñas verificadas</span>
+        <span style="color:var(--volt)">·</span>
+      </span>
+      <span class="flex items-center gap-10 pr-10" aria-hidden="true">
+        <span>Envíos gratis 24–48h con MRW &gt; €30</span>
+        <span style="color:var(--volt)">·</span>
+        <span>Pago 100% seguro · Visa, Bizum, PayPal</span>
+        <span style="color:var(--volt)">·</span>
+        <span>Tienda física en Terrassa, Barcelona</span>
+        <span style="color:var(--volt)">·</span>
+        <span>+15.000 reseñas verificadas</span>
+        <span style="color:var(--volt)">·</span>
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== NAV ====================== -->
+<header id="site-nav" class="sticky top-0 z-40 hairline border-b">
+  <div class="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 lg:h-[72px]">
+      <div class="flex items-center gap-2">
+        <button id="menu-btn" class="lg:hidden p-2 -ml-2" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 5h16M2 10h16M2 15h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"/></svg>
+        </button>
+        <a href="#top" class="font-display font-800 text-2xl tracking-tight leading-none">SFN<span style="color:var(--volt)">.</span></a>
+      </div>
+
+      <nav class="hidden lg:flex items-center gap-8 font-mono text-[11px] uppercase tracking-[0.1em]">
+        <a href="#grid" class="hover:opacity-60 transition-opacity">Proteínas</a>
+        <a href="#grid" class="hover:opacity-60 transition-opacity">Creatinas</a>
+        <a href="#grid" class="hover:opacity-60 transition-opacity">Pre-Entrenos</a>
+        <a href="#grid" class="hover:opacity-60 transition-opacity">Salud &amp; Bienestar</a>
+        <a href="#grid" class="hover:opacity-60 transition-opacity" style="color:var(--flame)">Ofertas</a>
+      </nav>
+
+      <div class="flex items-center gap-1">
+        <button id="theme-btn" class="p-2" aria-label="Cambiar tema">
+          <svg id="theme-icon" width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M10 1.5v2M10 16.5v2M18.5 10h-2M3.5 10h-2M15.6 4.4l-1.4 1.4M5.8 14.2l-1.4 1.4M15.6 15.6l-1.4-1.4M5.8 5.8L4.4 4.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <button class="p-2 hidden sm:inline-flex" aria-label="Buscar">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M17 17l-4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <button id="cart-btn" class="p-2 relative" aria-label="Abrir carrito" aria-haspopup="dialog" aria-controls="drawer">
+          <svg width="19" height="19" viewBox="0 0 20 20" fill="none"><path d="M4 6h12l-1 10.5a1 1 0 01-1 .9H6a1 1 0 01-1-.9L4 6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7 6V4.5a3 3 0 016 0V6" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span id="cart-count" class="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full text-[9px] font-bold flex items-center justify-center" style="background:var(--flame); color:var(--flame-ink)">0</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobile-menu" class="lg:hidden hidden pb-4 font-mono text-[12px] uppercase tracking-[0.1em] flex flex-col gap-3 hairline border-t pt-4">
+      <a href="#grid">Proteínas</a>
+      <a href="#grid">Creatinas</a>
+      <a href="#grid">Pre-Entrenos</a>
+      <a href="#grid">Salud &amp; Bienestar</a>
+      <a href="#grid" style="color:var(--flame)">Ofertas</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ====================== HERO ====================== -->
+<section class="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 pt-10 lg:pt-16 pb-14 lg:pb-20">
+  <div class="grid lg:grid-cols-12 gap-10 lg:gap-6 items-end">
+    <div class="lg:col-span-7">
+      <div class="font-mono text-[11px] uppercase tracking-[0.18em] mb-4" style="color:var(--muted)">Lote 002 — Temporada Rendimiento</div>
+      <h1 class="font-display font-800 leading-[0.9] text-[13vw] sm:text-[64px] lg:text-[88px] uppercase">
+        <span class="flip-line"><span class="flip-inner d1">Eleva tu</span></span>
+        <span class="flip-line"><span class="flip-inner d2" style="color:var(--volt); -webkit-text-stroke:1.5px var(--ink);">Rendimiento</span></span>
+        <span class="flip-line"><span class="flip-inner d3">Cada dosis.</span></span>
+      </h1>
+      <p class="mt-6 max-w-[46ch] text-[15px] sm:text-base leading-relaxed" style="color:var(--ink-soft)">
+        Suplementación testada en laboratorio para quienes entrenan en serio. Formulado, envasado y enviado desde nuestro centro en Terrassa — en tu puerta en 24–48h.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <a href="#grid" class="btn-volt font-mono text-[12px] uppercase tracking-[0.1em] font-bold px-7 py-4 rounded-full inline-flex items-center gap-2">
+          Explorar Novedades
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#footer" class="btn-ghost font-mono text-[12px] uppercase tracking-[0.1em] font-bold px-7 py-4 rounded-full inline-flex items-center gap-2">
+          Asesoramiento Nutricional
+        </a>
+      </div>
+
+      <div class="mt-10 flex flex-wrap gap-x-8 gap-y-3 font-mono text-[11px] uppercase tracking-[0.08em]" style="color:var(--ink-soft)">
+        <span class="flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M3 10l5 5L17 5" stroke="var(--volt)" stroke-width="2.5" stroke-linecap="square"/></svg>Testado en laboratorio</span>
+        <span class="flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M3 10l5 5L17 5" stroke="var(--volt)" stroke-width="2.5" stroke-linecap="square"/></svg>Envío en 24–48h</span>
+        <span class="flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M3 10l5 5L17 5" stroke="var(--volt)" stroke-width="2.5" stroke-linecap="square"/></svg>+15.000 reseñas verificadas</span>
+      </div>
+    </div>
+
+    <div class="lg:col-span-5">
+      <div class="relative rounded-card p-2 hairline border" style="background:var(--card)">
+        <div class="rounded-[6px] hairline border p-6 sm:p-8" style="background:var(--paper-2)">
+          <div class="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.14em] pb-4 mb-4 border-b rule" style="color:var(--muted)">
+            <span>Información Nutricional</span>
+            <span>Dosis: 30g</span>
+          </div>
+          <div class="space-y-0">
+            <div class="flex items-center justify-between py-2.5 border-b hairline"><span class="text-sm">Proteína</span><span class="font-mono font-bold text-sm tabular-nums">24 g</span></div>
+            <div class="flex items-center justify-between py-2.5 border-b hairline"><span class="text-sm">Carbohidratos</span><span class="font-mono font-bold text-sm tabular-nums">2.1 g</span></div>
+            <div class="flex items-center justify-between py-2.5 border-b hairline"><span class="text-sm">Grasas</span><span class="font-mono font-bold text-sm tabular-nums">1.0 g</span></div>
+            <div class="flex items-center justify-between py-3"><span class="text-sm font-bold">Calorías</span><span class="font-mono font-bold text-base tabular-nums">112 kcal</span></div>
+          </div>
+          <div class="mt-5 pt-5 border-t-[3px]" style="border-color:var(--line-strong)">
+            <div class="flex items-baseline justify-between">
+              <span class="font-display font-700 text-lg uppercase">Whey Isolate</span>
+              <span class="font-mono text-xs" style="color:var(--muted)">Vainilla · 2kg</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== CATEGORY NAVIGATOR ====================== -->
+<section class="border-t border-b rule">
+  <div class="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
+    <div class="flex gap-3 overflow-x-auto pb-1" style="scrollbar-width:none;">
+      <button class="cat-pill reveal pre shrink-0 rounded-full px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.08em] flex items-center gap-2">
+        <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><rect x="2" y="8.5" width="3" height="3" fill="currentColor"/><rect x="15" y="8.5" width="3" height="3" fill="currentColor"/><path d="M5 10h10" stroke="currentColor" stroke-width="1.6"/><rect x="6.5" y="6.5" width="1.6" height="7" fill="currentColor"/><rect x="11.9" y="6.5" width="1.6" height="7" fill="currentColor"/></svg>
+        Proteínas
+      </button>
+      <button class="cat-pill reveal pre shrink-0 rounded-full px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.08em] flex items-center gap-2">
+        <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M11 2L4 12h5l-1 6 8-11h-5l0-5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        Creatinas
+      </button>
+      <button class="cat-pill reveal pre shrink-0 rounded-full px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.08em] flex items-center gap-2">
+        <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 17s-6-4.2-6-9a4 4 0 017-2.6A4 4 0 0118 8c0 4.8-6 9-6 9z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        Salud &amp; Bienestar
+      </button>
+      <button class="cat-pill reveal pre shrink-0 rounded-full px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.08em] flex items-center gap-2">
+        <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 2c3 3 5 5.5 5 9a5 5 0 01-10 0c0-1.4.6-2.4 1.3-3.4.2 1 .9 1.6 1.7 1.6-.3-2 .4-4 3-7.2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        Pre-Entrenos
+      </button>
+      <button class="cat-pill reveal pre shrink-0 rounded-full px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.08em] flex items-center gap-2">
+        <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M4 6h12M10 6v11M6 6l-2.5 6a2.5 2.5 0 005 0L6 6zM14 6l-2.5 6a2.5 2.5 0 005 0L14 6z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Control de Peso
+      </button>
+      <button class="cat-pill reveal pre shrink-0 rounded-full px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.08em] flex items-center gap-2" style="border-color:var(--flame); color:var(--flame)">
+        <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M3 10l3.5 3.5L17 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        Ofertas
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== BEST-SELLERS GRID ====================== -->
+<section id="grid" class="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+  <div class="flex items-end justify-between mb-10 gap-4 reveal pre">
+    <div>
+      <div class="font-mono text-[11px] uppercase tracking-[0.18em] mb-2" style="color:var(--muted)">Más vendidos</div>
+      <h2 class="font-display font-800 text-4xl sm:text-5xl uppercase leading-none">Lo esencial<br/>de tu rutina</h2>
+    </div>
+    <a href="#" class="hidden sm:inline-flex font-mono text-[11px] uppercase tracking-[0.1em] items-center gap-1.5 pb-1 border-b rule">Ver todo<svg width="12" height="12" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
+
+    <!-- Card 1 -->
+    <article class="p-card reveal pre rounded-card overflow-hidden flex flex-col" data-name="Whey Isolate Rendimiento" data-price="39.95">
+      <div class="p-media aspect-square" style="background:linear-gradient(150deg,var(--paper-2),var(--paper))">
+        <span class="absolute top-3 left-3 z-10 font-mono text-[10px] uppercase tracking-[0.08em] font-bold px-2.5 py-1 rounded-full" style="background:var(--ink); color:var(--paper)">Bestseller</span>
+        <button class="absolute top-3 right-3 z-10 p-2 rounded-full hairline border" style="background:var(--card)" aria-label="Añadir a favoritos">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 17s-6-4.2-6-9a4 4 0 017-2.6A4 4 0 0118 8c0 4.8-6 9-6 9z" stroke="currentColor" stroke-width="1.5"/></svg>
+        </button>
+        <div class="p-glyph absolute inset-0 flex items-center justify-center">
+          <svg width="86" height="120" viewBox="0 0 86 120" fill="none"><rect x="24" y="6" width="38" height="16" rx="3" fill="var(--ink)"/><path d="M28 22h30l6 14v72a6 6 0 01-6 6H28a6 6 0 01-6-6V36l6-14z" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/><rect x="26" y="52" width="34" height="30" fill="var(--volt)"/><text x="43" y="71" font-family="JetBrains Mono" font-size="9" fill="var(--ink)" text-anchor="middle" font-weight="700">WHEY</text></svg>
+        </div>
+        <div class="nutri-panel p-5 flex flex-col justify-center font-mono text-[11px]">
+          <div class="uppercase tracking-[0.1em] mb-3 opacity-60">Por dosis (30g)</div>
+          <div class="flex justify-between py-1 border-b border-white/15"><span>Proteína</span><span class="font-bold tabular-nums">24g</span></div>
+          <div class="flex justify-between py-1 border-b border-white/15"><span>Carbohidratos</span><span class="font-bold tabular-nums">2.1g</span></div>
+          <div class="flex justify-between py-1"><span>Grasas</span><span class="font-bold tabular-nums">1.0g</span></div>
+        </div>
+      </div>
+      <div class="p-4 sm:p-5 flex flex-col gap-3 flex-1">
+        <div class="flex items-center gap-1.5 font-mono text-[11px]" style="color:var(--muted)">
+          <div class="flex gap-0.5" style="color:var(--volt-ink)">
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="var(--ink)"><path d="M10 1l2.6 6.2 6.7.6-5.1 4.4 1.6 6.6L10 15.6 4.2 18.8l1.6-6.6L.7 7.8l6.7-.6z"/></svg>
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="var(--ink)"><path d="M10 1l2.6 6.2 6.7.6-5.1 4.4 1.6 6.6L10 15.6 4.2 18.8l1.6-6.6L.7 7.8l6.7-.6z"/></svg>
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="var(--ink)"><path d="M10 1l2.6 6.2 6.7.6-5.1 4.4 1.6 6.6L10 15.6 4.2 18.8l1.6-6.6L.7 7.8l6.7-.6z"/></svg>
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="var(--ink)"><path d="M10 1l2.6 6.2 6.7.6-5.1 4.4 1.6 6.6L10 15.6 4.2 18.8l1.6-6.6L.7 7.8l6.7-.6z"/></svg>
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="var(--ink)"><path d="M10 1l2.6 6.2 6.7.6-5.1 4.4 1.6 6.6L10 15.6 4.2 18.8l1.6-6.6L.7 7.8l6.7-.6z"/></svg>
+          </div>
+          <span>4.8 (312)</span>
+        </div>
+        <h3 class="font-display font-700 text-lg uppercase leading-tight">Whey Isolate Rendimiento</h3>
+
+        <div class="flex items-center gap-2" role="radiogroup" aria-label="Sabor">
+          <button class="swatch w-5 h-5 rounded-full" style="background:#E7CBAE" aria-checked="true" role="radio" aria-label="Vainilla"></button>
+          <button class="swatch w-5 h-5 rounded-full" style="background:#5B3A29" aria-checked="false" role="radio" aria-label="Chocolate"></button>
+          <button class="swatch w-5 h-5 rounded-full" style="background:#C23B4B" aria-checked="false" role="radio" aria-label="Fresa"></button>
+          <span class="font-mono text-[10px] uppercase ml-1" style="color:var(--muted)">Vainilla</span>
+        </div>
+
+        <div class="flex gap-2" role="radiogroup" aria-label="Formato">
+          <button class="size-pill hairline border rounded-full px-3 py-1 font-mono text-[10px]" role="radio" aria-checked="false">1kg</button>
+          <button class="size-pill hairline border rounded-full px-3 py-1 font-mono text-[10px]" role="radio" aria-checked="true">2kg</button>
+        </div>
+
+        <div class="mt-auto pt-2 flex items-end justify-between">
+          <div class="flex items-baseline gap-2">
+            <span class="font-display font-800 text-2xl tabular-nums">€39,95</span>
+            <span class="font-mono text-xs line-through" style="color:var(--muted)">€49,95</span>
+          </div>
+          <span class="font-mono text-[10px] uppercase" style="color:var(--volt-ink); background:var(--volt); padding:2px 6px; border-radius:3px;">-20%</span>
+        </div>
+        <div class="font-mono text-[10px] uppercase tracking-[0.06em]" style="color:#3E9B4F">● En stock — envío hoy</div>
+
+        <button class="add-btn btn-volt rounded-full py-3 font-mono text-[11px] uppercase tracking-[0.08em] font-bold flex items-center justify-center gap-2">
+          <span class="lbl flex items-center gap-2">Añadir al carrito
+            <svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="M4 6h12l-1 10.5a1 1 0 01-1 .9H6a1 1 0 01-1-.9L4 6z" stroke="currentColor" stroke-width="1.6"/></svg>
+          </span>
+          <span class="spin"><span class="spinner"></span></span>
+          <span class="ok">Añadido ✓</span>
+        </button>
+      </div>
+    </article>
+
+    <!-- Card 2 -->
+    <article class="p-card reveal pre rounded-card overflow-hidden flex flex-col" data-name="Creatina Monohidrato" data-price="19.95">
+      <div class="p-media aspect-square" style="background:linear-gradient(150deg,var(--paper-2),var(--paper))">
+        <button class="absolute top-3 right-3 z-10 p-2 rounded-full hairline border" style="background:var(--card)" aria-label="Añadir a favoritos">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 17s-6-4.2-6-9a4 4 0 017-2.6A4 4 0 0118 8c0 4.8-6 9-6 9z" stroke="currentColor" stroke-width="1.5"/></svg>
+        </button>
+        <div class="p-glyph absolute inset-0 flex items-center justify-center">
+          <svg width="72" height="120" viewBox="0 0 72 120" fill="none"><rect x="16" y="10" width="40" height="94" rx="8" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/><rect x="16" y="10" width="40" height="30" rx="8" fill="var(--ink)"/><text x="36" y="65" font-family="JetBrains Mono" font-size="8.5" fill="var(--ink)" text-anchor="middle" font-weight="700">CREA-</text><text x="36" y="77" font-family="JetBrains Mono" font-size="8.5" fill="var(--ink)" text-anchor="middle" font-weight="700">TINA</text></svg>
+        </div>
+        <div class="nutri-panel p-5 flex flex-col justify-center font-mono text-[11px]">
+          <div class="uppercase tracking-[0.1em] mb-3 opacity-60">Por dosis (5g)</div>
+          <div class="flex justify-between py-1 border-b border-white/15"><span>Creatina monohidrato</span><span class="font-bold tabular-nums">3g</span></div>
+          <div class="flex justify-between py-1 border-b border-white/15"><span>Azúcares</span><span class="font-bold tabular-nums">0g</span></div>
+          <div class="flex justify-between py-1"><span>Pureza Creapure®</span><span class="font-bold tabular-nums">99.9%</span></div>
+        </div>
+      </div>
+      <div class="p-4 sm:p-5 flex flex-col gap-3 flex-1">
+        <div class="flex items-center gap-1.5 font-mono text-[11px]" style="color:var(--muted)">
+          <div class="flex gap-0.5">
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="var(--ink)"><path d="M10 1l2.6 6.2 6.7.6-5.1 4.4 1.6 6.6L10 15.6 4.2 18.8l1.6-6.6L.7 7.8l6.7-.6z"/></svg>
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="var(--ink)"><path d="M10 1l2.6 6.2 6.7.6-5.1 4.4 1.6 6.6L10 15.6 4.2 18.8l1.6-6.6L.7 7.8l6.7-.6z"/></svg>
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="var(--ink)"><path d="M10 1l2.6 6.2 6.7.6-5.1 4.4 1.6 6.6L10 15.6 4.2 18.8l1.6-6.6L.7 7.8l6.7-.6z"/></svg>
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="var(--ink)"><path d="M10 1l2.6 6.2 6.7.6-5.1 4.4 1.6 6.6L10 15.6 4.2 18.8l1.6-6.6L.7 7.8l6.7-.6z"/></svg>
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="var(--ink)" opacity=".3"><path d="M10 1l2.6 6.2 6.7.6-5.1 4.4 1.6 6.6L10 15.6 4.2 18.8l1.6-6.6L.7 7.8l6.7-.6z"/></svg>
+          </div>
+          <span>4.9 (587)</span>
+        </div>
+        <h3 class="font-display font-700 text-lg uppercase leading-tight">Creatina Monohidrato Micronizada</h3>
+
+        <div class="flex items-center gap-2">
+          <span class="font-mono text-[10px] uppercase" style="color:var(--muted)">Sin sabor · Neutro</span>
+        </div>
+
+        <div class="flex gap-2" role="radiogroup" aria-label="Formato">
+          <button class="size-pill hairline border rounded-full px-3 py-1 font-mono text-[10px]" role="radio" aria-checked="true">500g</button>
+          <button class="size-pill hairline border rounded-full px-3 py-1 font-mono text-[10px]" role="radio" aria-checked="false">1kg</button>
+        </div>
+
+        <div class="mt-auto pt-2 flex items-end justify-between">
+          <div class="flex items-baseline gap-2">
+            <span class="font-display font-800 text-2xl tabular-nums">€19,95</span>
+          </div>
+        </div>
+        <div class="font-mono text-[10px] uppercase tracking-[0.06em]" style="color:#B4841F">● Quedan 6 uds.</div>
+
+        <button class="add-btn btn-volt rounded-full py-3 font-mono text-[11px] uppercase tracking-[0.08em] font-bold flex items-center justify-center gap-2">
+          <span class="lbl flex items-center gap-2">Añadir al carrito
+            <svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="M4 6h12l-1 10.5a1 1 0 01-1 .9H6a1 1 0 01-1-.9L4 6z" stroke="currentColor" stroke-width="1.6"/></svg>
+          </span>
+          <span class="spin"><span class="spinner"></span></span>
+          <span class="ok">Añadido ✓</span>
+        </button>
+      </div>
+    </article>
+
+    <!-- Card 3 -->
+    <article class="p-card reveal pre rounded-card overflow-hidden flex flex-col" data-name="Pre-Entreno Ignite" data-price="29.95">
+      <div class="p-media aspect-square" style="background:linear-gradient(150deg,var(--paper-2),var(--paper))">
+        <span class="absolute top-3 left-3 z-10 font-mono text-[10px] uppercase tracking-[0.08em] font-bold px-2.5 py-1 rounded-full" style="background:var(--flame); color:var(--flame-ink)">-15%</span>
+        <button class="absolute top-3 right-3 z-10 p-2 rounded-full hairline border" style="background:var(--card)" aria-label="Añadir a favoritos">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 17s-6-4.2-6-9a4 4 0 017-2.6A4 4 0 0118 8c0 4.8-6 9-6 9z" stroke="currentColor" stroke-width="1.5"/></svg>
+        </button>
+        <div class="p-glyph absolute inset-0 flex items-center justify-center">
+          <svg width="86" height="120" viewBox="0 0 86 120" fill="none"><rect x="24" y="6" width="38" height="16" rx="3" fill="var(--flame)"/><path d="M28 22h30l6 14v72a6 6 0 01-6 6H28a6 6 0 01-6-6V36l6-14z" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/><rect x="26" y="52" width="34" height="30" fill="var(--ink)"/><text x="43" y="71" font-family="JetBrains Mono" font-size="8" fill="var(--paper)" text-anchor="middle" font-weight="700">IGNITE</text></svg>
+        </div>
+        <div class="nutri-panel p-5 flex flex-col justify-center font-mono text-[11px]">
+          <div class="uppercase tracking-[0.1em] mb-3 opacity-60">Por dosis (12g)</div>
+          <div class="flex justify-between py-1 border-b border-white/15"><span>Cafeína</span><span class="font-bold tabular-nums">200mg</span></div>
+          <div class="flex justify-between py-1 border-b border-white/15"><span>Beta-Alanina</span><span class="font-bold tabular-nums">3.2g</span></div>
+          <div class="flex justify-between py-1"><span>Citrulina Malato</span><span class="font-bold tabular-nums">6g</span></div>
+        </div>
+      </div>
+      <div class="p-4 sm:p-5 flex flex-col gap-3 flex-1">
+        <div class="flex items-center gap-1.5 font-mono text-[11px]" style="color:var(--muted)">
+          <div class="flex gap-0.5">
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="var(--ink)"><path d="M10 1l2.6 6.2 6.7.6-5.1 4.4 1.6 6.6L10 15.6 4.2 18.8l1.6-6.6L.7 7.8l6.7-.6z"/></svg>
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="var(--ink)"><path d="M10 1l2.6 6.2 6.7.6-5.1 4.4 1.6 6.6L10 15.6 4.2 18.8l1.6-6.6L.7 7.8l6.7-.6z"/></svg>
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="var(--ink)"><path d="M10 1l2.6 6.2 6.7.6-5.1 4.4 1.6 6.6L10 15.6 4.2 18.8l1.6-6.6L.7 7.8l6.7-.6z"/></svg>
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="var(--ink)"><path d="M10 1l2.6 6.2 6.7.6-5.1 4.4 1.6 6.6L10 15.6 4.2 18.8l1.6-6.6L.7 7.8l6.7-.6z"/></svg>
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="var(--ink)" opacity=".3"><path d="M10 1l2.6 6.2 6.7.6-5.1 4.4 1.6 6.6L10 15.6 4.2 18.8l1.6-6.6L.7 7.8l6.7-.6z"/></svg>
+          </div>
+          <span>4.6 (204)</span>
+        </div>
+        <h3 class="font-display font-700 text-lg uppercase leading-tight">Pre-Entreno Ignite</h3>
+
+        <div class="flex items-center gap-2" role="radiogroup" aria-label="Sabor">
+          <button class="swatch w-5 h-5 rounded-full" style="background:#C23B4B" aria-checked="true" role="radio" aria-label="Sandía"></button>
+          <button class="swatch w-5 h-5 rounded-full" style="background:#4C7EE0" aria-checked="false" role="radio" aria-label="Frutos del bosque"></button>
+          <span class="font-mono text-[10px] uppercase ml-1" style="color:var(--muted)">Sandía</span>
+        </div>
+
+        <div class="flex gap-2" role="radiogroup" aria-label="Formato">
+          <button class="size-pill hairline border rounded-full px-3 py-1 font-mono text-[10px]" role="radio" aria-checked="true">300g</button>
+        </div>
+
+        <div class="mt-auto pt-2 flex items-end justify-between">
+          <div class="flex items-baseline gap-2">
+            <span class="font-display font-800 text-2xl tabular-nums">€29,95</span>
+            <span class="font-mono text-xs line-through" style="color:var(--muted)">€34,95</span>
+          </div>
+        </div>
+        <div class="font-mono text-[10px] uppercase tracking-[0.06em]" style="color:#3E9B4F">● En stock — envío hoy</div>
+
+        <button class="add-btn btn-volt rounded-full py-3 font-mono text-[11px] uppercase tracking-[0.08em] font-bold flex items-center justify-center gap-2">
+          <span class="lbl flex items-center gap-2">Añadir al carrito
+            <svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="M4 6h12l-1 10.5a1 1 0 01-1 .9H6a1 1 0 01-1-.9L4 6z" stroke="currentColor" stroke-width="1.6"/></svg>
+          </span>
+          <span class="spin"><span class="spinner"></span></span>
+          <span class="ok">Añadido ✓</span>
+        </button>
+      </div>
+    </article>
+
+    <!-- Card 4 -->
+    <article class="p-card reveal pre rounded-card overflow-hidden flex flex-col" data-name="Multivitamínico Diario" data-price="17.95">
+      <div class="p-media aspect-square" style="background:linear-gradient(150deg,var(--paper-2),var(--paper))">
+        <button class="absolute top-3 right-3 z-10 p-2 rounded-full hairline border" style="background:var(--card)" aria-label="Añadir a favoritos">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 17s-6-4.2-6-9a4 4 0 017-2.6A4 4 0 0118 8c0 4.8-6 9-6 9z" stroke="currentColor" stroke-width="1.5"/></svg>
+        </button>
+        <div class="p-glyph absolute inset-0 flex items-center justify-center">
+          <svg width="70" height="100" viewBox="0 0 70 100" fill="none"><rect x="12" y="8" width="46" height="84" rx="20" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/><rect x="12" y="8" width="46" height="40" rx="20" fill="var(--ink)"/><rect x="12" y="30" width="46" height="18" fill="var(--ink)"/><text x="35" y="72" font-family="JetBrains Mono" font-size="7.5" fill="var(--ink)" text-anchor="middle" font-weight="700">MULTI</text><text x="35" y="82" font-family="JetBrains Mono" font-size="7.5" fill="var(--ink)" text-anchor="middle" font-weight="700">VIT</text></svg>
+        </div>
+        <div class="nutri-panel p-5 flex flex-col justify-center font-mono text-[11px]">
+          <div class="uppercase tracking-[0.1em] mb-3 opacity-60">Por dosis (1 cáp.)</div>
+          <div class="flex justify-between py-1 border-b border-white/15"><span>Vitaminas</span><span class="font-bold tabular-nums">12</span></div>
+          <div class="flex justify-between py-1 border-b border-white/15"><span>Minerales</span><span class="font-bold tabular-nums">8</span></div>
+          <div class="flex justify-between py-1"><span>Vegano</span><span class="font-bold tabular-nums">Sí</span></div>
+        </div>
+      </div>
+      <div class="p-4 sm:p-5 flex flex-col gap-3 flex-1">
+        <div class="flex items-center gap-1.5 font-mono text-[11px]" style="color:var(--muted)">
+          <div class="flex gap-0.5">
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="var(--ink)"><path d="M10 1l2.6 6.2 6.7.6-5.1 4.4 1.6 6.6L10 15.6 4.2 18.8l1.6-6.6L.7 7.8l6.7-.6z"/></svg>
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="var(--ink)"><path d="M10 1l2.6 6.2 6.7.6-5.1 4.4 1.6 6.6L10 15.6 4.2 18.8l1.6-6.6L.7 7.8l6.7-.6z"/></svg>
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="var(--ink)"><path d="M10 1l2.6 6.2 6.7.6-5.1 4.4 1.6 6.6L10 15.6 4.2 18.8l1.6-6.6L.7 7.8l6.7-.6z"/></svg>
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="var(--ink)"><path d="M10 1l2.6 6.2 6.7.6-5.1 4.4 1.6 6.6L10 15.6 4.2 18.8l1.6-6.6L.7 7.8l6.7-.6z"/></svg>
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="var(--ink)"><path d="M10 1l2.6 6.2 6.7.6-5.1 4.4 1.6 6.6L10 15.6 4.2 18.8l1.6-6.6L.7 7.8l6.7-.6z"/></svg>
+          </div>
+          <span>4.9 (156)</span>
+        </div>
+        <h3 class="font-display font-700 text-lg uppercase leading-tight">Multivitamínico Diario Rendimiento</h3>
+
+        <div class="flex items-center gap-2">
+          <span class="font-mono text-[10px] uppercase" style="color:var(--muted)">100% Vegano</span>
+        </div>
+
+        <div class="flex gap-2" role="radiogroup" aria-label="Formato">
+          <button class="size-pill hairline border rounded-full px-3 py-1 font-mono text-[10px]" role="radio" aria-checked="true">90 cáps.</button>
+        </div>
+
+        <div class="mt-auto pt-2 flex items-end justify-between">
+          <div class="flex items-baseline gap-2">
+            <span class="font-display font-800 text-2xl tabular-nums">€17,95</span>
+          </div>
+        </div>
+        <div class="font-mono text-[10px] uppercase tracking-[0.06em]" style="color:#3E9B4F">● En stock — envío hoy</div>
+
+        <button class="add-btn btn-volt rounded-full py-3 font-mono text-[11px] uppercase tracking-[0.08em] font-bold flex items-center justify-center gap-2">
+          <span class="lbl flex items-center gap-2">Añadir al carrito
+            <svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="M4 6h12l-1 10.5a1 1 0 01-1 .9H6a1 1 0 01-1-.9L4 6z" stroke="currentColor" stroke-width="1.6"/></svg>
+          </span>
+          <span class="spin"><span class="spinner"></span></span>
+          <span class="ok">Añadido ✓</span>
+        </button>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ====================== TRUST BLOCK ====================== -->
+<section class="border-t rule" style="background:var(--paper-2)">
+  <div class="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-16">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
+      <div class="trust-item reveal pre flex flex-col gap-3">
+        <div class="trust-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M2 7h13v9H2zM15 10h4l3 3v3h-7v-6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="1.8" stroke="currentColor" stroke-width="1.5"/><circle cx="17.5" cy="18" r="1.8" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        <div>
+          <div class="font-display font-700 uppercase text-base">Envío en 24–48h</div>
+          <p class="text-sm mt-1" style="color:var(--ink-soft)">Pedidos antes de las 15h con MRW, gratis a partir de €30.</p>
+        </div>
+      </div>
+      <div class="trust-item reveal pre flex flex-col gap-3">
+        <div class="trust-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 3.5v6c0 5-3.4 8.8-8 10.5-4.6-1.7-8-5.5-8-10.5v-6L12 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.5 12l2.5 2.5 4.5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="font-display font-700 uppercase text-base">Pago 100% seguro</div>
+          <p class="text-sm mt-1" style="color:var(--ink-soft)">Visa, Mastercard, Bizum y PayPal con cifrado SSL.</p>
+        </div>
+      </div>
+      <div class="trust-item reveal pre flex flex-col gap-3">
+        <div class="trust-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0112 2a7 7 0 017 7.5C19 14.8 12 21 12 21z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="9.5" r="2.4" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        <div>
+          <div class="font-display font-700 uppercase text-base">Tienda física</div>
+          <p class="text-sm mt-1" style="color:var(--ink-soft)">Visítanos en Terrassa, Barcelona — asesoramiento cara a cara.</p>
+        </div>
+      </div>
+      <div class="trust-item reveal pre flex flex-col gap-3">
+        <div class="trust-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.6 5.6 6.2.6-4.6 4.2 1.3 6.1L12 15.6l-5.5 2.9 1.3-6.1L3.2 8.2l6.2-.6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="font-display font-700 uppercase text-base">+15.000 reseñas</div>
+          <p class="text-sm mt-1" style="color:var(--ink-soft)">Valoración media de 4.8/5 verificada por clientes reales.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ====================== FOOTER ====================== -->
+<footer id="footer" style="background:var(--ink); color:var(--paper)">
+  <div class="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-6 pb-12 border-b border-white/15">
+      <div class="lg:col-span-2">
+        <a href="#top" class="font-display font-800 text-3xl">SFN<span style="color:var(--volt)">.</span></a>
+        <p class="mt-4 max-w-[34ch] text-sm" style="color:var(--paper-2); opacity:.75">Sport Fitness Nutrition — suplementación deportiva de confianza desde Terrassa, Barcelona.</p>
+        <div class="mt-6 max-w-sm">
+          <label for="nl-email" class="font-mono text-[10px] uppercase tracking-[0.12em] opacity-70">Newsletter — 10% en tu primer pedido</label>
+          <div class="mt-2 flex hairline border rounded-full overflow-hidden" style="border-color:rgba(255,255,255,.25)">
+            <input id="nl-email" type="email" placeholder="tu@email.com" class="flex-1 bg-transparent px-4 py-2.5 text-sm outline-none placeholder:opacity-50" style="color:var(--paper)"/>
+            <button class="px-4" style="color:var(--volt)" aria-label="Suscribirse">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="font-mono text-[10px] uppercase tracking-[0.12em] opacity-60 mb-4">Tienda</div>
+        <ul class="space-y-2.5 text-sm" style="opacity:.85">
+          <li><a href="#grid">Proteínas</a></li>
+          <li><a href="#grid">Creatinas</a></li>
+          <li><a href="#grid">Pre-Entrenos</a></li>
+          <li><a href="#grid">Salud &amp; Bienestar</a></li>
+          <li><a href="#grid">Ofertas</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="font-mono text-[10px] uppercase tracking-[0.12em] opacity-60 mb-4">Ayuda</div>
+        <ul class="space-y-2.5 text-sm" style="opacity:.85">
+          <li><a href="#">Envíos y plazos</a></li>
+          <li><a href="#">Devoluciones</a></li>
+          <li><a href="#">Preguntas frecuentes</a></li>
+          <li><a href="#">Contacto</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="font-mono text-[10px] uppercase tracking-[0.12em] opacity-60 mb-4">Visítanos</div>
+        <ul class="space-y-2.5 text-sm" style="opacity:.85">
+          <li>C/ Exemple 123<br/>08221 Terrassa, Barcelona</li>
+          <li>L–V 9:00–20:00</li>
+          <li>Sáb 10:00–14:00</li>
+        </ul>
+      </div>
+    </div>
+    <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.08em]" style="opacity:.6">
+      <span>© 2026 Sport Fitness Nutrition. Todos los derechos reservados.</span>
+      <span class="flex items-center gap-3">Visa · Mastercard · PayPal · Bizum</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ====================== CART DRAWER ====================== -->
+<div id="overlay" class="fixed inset-0 z-50"></div>
+<aside id="drawer" class="fixed top-0 right-0 z-50 h-full w-full sm:w-[420px] flex flex-col" style="background:var(--card)" role="dialog" aria-modal="true" aria-label="Carrito de compra">
+  <div class="flex items-center justify-between px-5 py-4 border-b rule">
+    <h2 class="font-display font-700 uppercase text-lg">Tu carrito</h2>
+    <button id="drawer-close" class="p-2" aria-label="Cerrar carrito">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+
+  <div class="px-5 py-4 border-b rule">
+    <div class="flex justify-between font-mono text-[10px] uppercase tracking-[0.08em] mb-2">
+      <span id="ship-msg" style="color:var(--ink-soft)">Añade €30,00 para envío gratis</span>
+    </div>
+    <div class="h-1.5 rounded-full overflow-hidden hairline border" style="background:var(--paper-2)">
+      <div id="ship-fill" class="h-full" style="width:0%; background:var(--volt)"></div>
+    </div>
+  </div>
+
+  <div id="drawer-items" class="flex-1 overflow-y-auto px-5 py-4 flex flex-col gap-4">
+    <p id="empty-msg" class="text-sm text-center py-10" style="color:var(--muted)">Tu carrito está vacío. Añade productos para empezar.</p>
+  </div>
+
+  <div class="px-5 py-5 border-t rule">
+    <div class="flex justify-between items-baseline mb-4">
+      <span class="font-mono text-[11px] uppercase tracking-[0.08em]" style="color:var(--ink-soft)">Subtotal</span>
+      <span id="drawer-subtotal" class="font-display font-800 text-2xl tabular-nums">€0,00</span>
+    </div>
+    <button class="btn-volt w-full rounded-full py-4 font-mono text-[12px] uppercase tracking-[0.1em] font-bold">Finalizar Compra</button>
+  </div>
+</aside>
+
+<script>
+(function(){
+  try{
+    var saved = localStorage.getItem('sfn-theme');
+    if(saved) document.documentElement.setAttribute('data-theme', saved);
+  }catch(e){}
+
+  var themeBtn = document.getElementById('theme-btn');
+  themeBtn.addEventListener('click', function(){
+    var root = document.documentElement;
+    var current = root.getAttribute('data-theme');
+    var isDark = current === 'dark' || (!current && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    var next = isDark ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try{ localStorage.setItem('sfn-theme', next); }catch(e){}
+  });
+
+  var menuBtn = document.getElementById('menu-btn');
+  var mobileMenu = document.getElementById('mobile-menu');
+  menuBtn.addEventListener('click', function(){
+    var open = mobileMenu.classList.toggle('hidden') === false;
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  var nav = document.getElementById('site-nav');
+  var lastY = window.scrollY;
+  window.addEventListener('scroll', function(){
+    var y = window.scrollY;
+    nav.classList.toggle('blurred', y > 8);
+    if(y > lastY && y > 120){ nav.classList.add('hide'); }
+    else{ nav.classList.remove('hide'); }
+    lastY = y;
+  }, { passive:true });
+
+  document.querySelectorAll('.reveal.pre').forEach(function(el){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){ entry.target.classList.add('go'); io.unobserve(entry.target); }
+      });
+    }, { threshold:0.15 });
+    io.observe(el);
+  });
+
+  document.querySelectorAll('[role="radiogroup"]').forEach(function(group){
+    group.querySelectorAll('[role="radio"]').forEach(function(radio){
+      radio.addEventListener('click', function(){
+        group.querySelectorAll('[role="radio"]').forEach(function(r){ r.setAttribute('aria-checked','false'); });
+        radio.setAttribute('aria-checked','true');
+      });
+    });
+  });
+
+  var cart = { items:[], subtotal:0 };
+  var FREE_SHIP = 30;
+  var cartCount = document.getElementById('cart-count');
+  var drawerItems = document.getElementById('drawer-items');
+  var emptyMsg = document.getElementById('empty-msg');
+  var shipFill = document.getElementById('ship-fill');
+  var shipMsg = document.getElementById('ship-msg');
+  var drawerSubtotal = document.getElementById('drawer-subtotal');
+  var overlay = document.getElementById('overlay');
+  var drawer = document.getElementById('drawer');
+
+  function fmt(n){ return '€' + n.toFixed(2).replace('.', ','); }
+
+  function renderCart(){
+    drawerItems.innerHTML = '';
+    if(cart.items.length === 0){
+      drawerItems.appendChild(emptyMsg);
+    } else {
+      cart.items.forEach(function(item, idx){
+        var row = document.createElement('div');
+        row.className = 'flex items-center gap-3 pb-4 border-b hairline';
+        row.innerHTML =
+          '<div class="w-14 h-14 rounded-[6px] hairline border shrink-0" style="background:var(--paper-2)"></div>' +
+          '<div class="flex-1 min-w-0">' +
+            '<div class="font-display font-700 uppercase text-sm truncate">' + item.name + '</div>' +
+            '<div class="font-mono text-[11px] mt-0.5" style="color:var(--muted)">' + fmt(item.price) + ' &times; ' + item.qty + '</div>' +
+          '</div>' +
+          '<button data-idx="'+idx+'" class="remove-item p-1.5" aria-label="Eliminar"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>';
+        drawerItems.appendChild(row);
+      });
+    }
+    var subtotal = cart.items.reduce(function(s,i){ return s + i.price*i.qty; }, 0);
+    cart.subtotal = subtotal;
+    drawerSubtotal.textContent = fmt(subtotal);
+    var pct = Math.min(100, (subtotal / FREE_SHIP) * 100);
+    shipFill.style.width = pct + '%';
+    shipMsg.textContent = subtotal >= FREE_SHIP ? '¡Envío gratis desbloqueado!' : 'Añade ' + fmt(FREE_SHIP - subtotal) + ' para envío gratis';
+    var totalQty = cart.items.reduce(function(s,i){ return s + i.qty; }, 0);
+    cartCount.textContent = totalQty;
+    cartCount.classList.add('bump');
+    setTimeout(function(){ cartCount.classList.remove('bump'); }, 300);
+
+    drawerItems.querySelectorAll('.remove-item').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        cart.items.splice(parseInt(btn.dataset.idx,10), 1);
+        renderCart();
+      });
+    });
+  }
+
+  function openDrawer(){ overlay.classList.add('open'); drawer.classList.add('open'); }
+  function closeDrawer(){ overlay.classList.remove('open'); drawer.classList.remove('open'); }
+
+  document.getElementById('cart-btn').addEventListener('click', openDrawer);
+  document.getElementById('drawer-close').addEventListener('click', closeDrawer);
+  overlay.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeDrawer(); });
+
+  document.querySelectorAll('.add-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      if(btn.classList.contains('loading') || btn.classList.contains('done')) return;
+      var card = btn.closest('article');
+      var name = card.dataset.name;
+      var price = parseFloat(card.dataset.price);
+      btn.classList.add('loading');
+      setTimeout(function(){
+        btn.classList.remove('loading');
+        btn.classList.add('done');
+        var existing = cart.items.find(function(i){ return i.name === name; });
+        if(existing){ existing.qty += 1; } else { cart.items.push({ name:name, price:price, qty:1 }); }
+        renderCart();
+        openDrawer();
+        setTimeout(function(){ btn.classList.remove('done'); }, 1400);
+      }, 650);
+    });
+  });
+})();
+</script>
