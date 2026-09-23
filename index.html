@@ -100,6 +100,22 @@
   .btn-volt:active{ transform:translateY(0); }
   .btn-ghost{ border:1.5px solid var(--line-strong); color:var(--ink); transition:background-color .3s ease, color .3s ease; }
   .btn-ghost:hover{ background:var(--ink); color:var(--paper); }
+  .btn-ghost-on-dark{ border:1.5px solid rgba(255,255,255,.45); color:#fff; transition:background-color .3s ease, color .3s ease, border-color .3s ease; }
+  .btn-ghost-on-dark:hover{ background:#fff; color:#0B0B0C; border-color:#fff; }
+
+  /* ---------- hero photo ---------- */
+  #hero-bg{ top:-12%; bottom:-12%; height:124%; will-change:transform; }
+  .hero-photo{ transform:scale(1.08); filter:grayscale(.25) contrast(1.08) brightness(.92); animation:heroZoom 1.6s cubic-bezier(.16,1,.3,1) .1s both; }
+  @keyframes heroZoom{ from{ transform:scale(1.14); } to{ transform:scale(1.08); } }
+  #hero-card{ animation:heroCardIn .8s cubic-bezier(.16,1,.3,1) .25s both; }
+  @keyframes heroCardIn{ from{ opacity:0; transform:translateY(22px); } to{ opacity:1; transform:translateY(0); } }
+
+  /* ---------- favorite button ---------- */
+  .fav-btn{ transition:transform .3s cubic-bezier(.16,1,.3,1); }
+  .fav-btn svg path{ transition:fill .25s ease, stroke .25s ease; }
+  .fav-btn[aria-pressed="true"] svg path{ fill:var(--volt); stroke:var(--volt); }
+  .fav-btn.pulse{ animation:favPulse .45s cubic-bezier(.16,1,.3,1); }
+  @keyframes favPulse{ 0%{ transform:scale(1); } 45%{ transform:scale(1.3) rotate(-6deg); } 100%{ transform:scale(1); } }
 
   /* ---------- category pills ---------- */
   .cat-pill{ border:1.5px solid var(--line-strong); transition:transform .3s cubic-bezier(.16,1,.3,1), background-color .3s ease, color .3s ease; }
@@ -234,52 +250,62 @@
 <main id="top">
 
 <!-- ====================== HERO ====================== -->
-<section class="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 pt-10 lg:pt-16 pb-14 lg:pb-20">
-  <div class="grid lg:grid-cols-12 gap-10 lg:gap-6 items-end">
-    <div class="lg:col-span-7">
-      <div class="font-mono text-[11px] uppercase tracking-[0.18em] mb-4" style="color:var(--muted)">Lote 002 — Temporada Rendimiento</div>
-      <h1 class="font-display font-800 leading-[0.9] text-[13vw] sm:text-[64px] lg:text-[88px] uppercase">
-        <span class="flip-line"><span class="flip-inner d1">Eleva tu</span></span>
-        <span class="flip-line"><span class="flip-inner d2" style="color:var(--volt); -webkit-text-stroke:1.5px var(--ink);">Rendimiento</span></span>
-        <span class="flip-line"><span class="flip-inner d3">Cada dosis.</span></span>
-      </h1>
-      <p class="mt-6 max-w-[46ch] text-[15px] sm:text-base leading-relaxed" style="color:var(--ink-soft)">
-        Suplementación testada en laboratorio para quienes entrenan en serio. Formulado, envasado y enviado desde nuestro centro en Terrassa — en tu puerta en 24–48h.
-      </p>
-      <div class="mt-8 flex flex-wrap items-center gap-3">
-        <a href="#grid" class="btn-volt font-mono text-[12px] uppercase tracking-[0.1em] font-bold px-7 py-4 rounded-full inline-flex items-center gap-2">
-          Explorar Novedades
-          <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
-        <a href="#footer" class="btn-ghost font-mono text-[12px] uppercase tracking-[0.1em] font-bold px-7 py-4 rounded-full inline-flex items-center gap-2">
-          Asesoramiento Nutricional
-        </a>
+<section class="relative isolate overflow-hidden">
+  <div id="hero-bg" class="absolute inset-0 -z-10">
+    <picture>
+      <source media="(max-width:640px)" srcset="images/hero/gym-barbell-mobile.jpg">
+      <img id="hero-photo" src="images/hero/gym-barbell.jpg" alt="" class="hero-photo w-full h-full object-cover" fetchpriority="high"/>
+    </picture>
+    <div class="absolute inset-0" style="background:linear-gradient(100deg, rgba(11,11,12,.95) 0%, rgba(11,11,12,.86) 32%, rgba(11,11,12,.55) 62%, rgba(227,36,2,.28) 100%)"></div>
+  </div>
+
+  <div class="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 pt-14 lg:pt-24 pb-16 lg:pb-24">
+    <div class="grid lg:grid-cols-12 gap-10 lg:gap-6 items-end">
+      <div class="lg:col-span-7">
+        <div class="font-mono text-[11px] uppercase tracking-[0.18em] mb-4" style="color:rgba(255,255,255,.6)">Lote 002 — Temporada Rendimiento</div>
+        <h1 class="font-display font-800 leading-[0.9] text-[13vw] sm:text-[64px] lg:text-[88px] uppercase" style="color:#fff">
+          <span class="flip-line"><span class="flip-inner d1">Eleva tu</span></span>
+          <span class="flip-line"><span class="flip-inner d2" style="color:var(--volt); -webkit-text-stroke:1.5px #0B0B0C;">Rendimiento</span></span>
+          <span class="flip-line"><span class="flip-inner d3">Cada dosis.</span></span>
+        </h1>
+        <p class="mt-6 max-w-[46ch] text-[15px] sm:text-base leading-relaxed" style="color:rgba(255,255,255,.82)">
+          Suplementación testada en laboratorio para quienes entrenan en serio. Formulado, envasado y enviado desde nuestro centro en Terrassa — en tu puerta en 24–48h.
+        </p>
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <a href="#grid" class="btn-volt font-mono text-[12px] uppercase tracking-[0.1em] font-bold px-7 py-4 rounded-full inline-flex items-center gap-2">
+            Explorar Novedades
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="#footer" class="btn-ghost-on-dark font-mono text-[12px] uppercase tracking-[0.1em] font-bold px-7 py-4 rounded-full inline-flex items-center gap-2">
+            Asesoramiento Nutricional
+          </a>
+        </div>
+
+        <div class="mt-10 flex flex-wrap gap-x-8 gap-y-3 font-mono text-[11px] uppercase tracking-[0.08em]" style="color:rgba(255,255,255,.78)">
+          <span class="flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M3 10l5 5L17 5" stroke="var(--volt)" stroke-width="2.5" stroke-linecap="square"/></svg>Testado en laboratorio</span>
+          <span class="flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M3 10l5 5L17 5" stroke="var(--volt)" stroke-width="2.5" stroke-linecap="square"/></svg>Envío en 24–48h</span>
+          <span class="flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M3 10l5 5L17 5" stroke="var(--volt)" stroke-width="2.5" stroke-linecap="square"/></svg>+15.000 reseñas verificadas</span>
+        </div>
       </div>
 
-      <div class="mt-10 flex flex-wrap gap-x-8 gap-y-3 font-mono text-[11px] uppercase tracking-[0.08em]" style="color:var(--ink-soft)">
-        <span class="flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M3 10l5 5L17 5" stroke="var(--volt)" stroke-width="2.5" stroke-linecap="square"/></svg>Testado en laboratorio</span>
-        <span class="flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M3 10l5 5L17 5" stroke="var(--volt)" stroke-width="2.5" stroke-linecap="square"/></svg>Envío en 24–48h</span>
-        <span class="flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M3 10l5 5L17 5" stroke="var(--volt)" stroke-width="2.5" stroke-linecap="square"/></svg>+15.000 reseñas verificadas</span>
-      </div>
-    </div>
-
-    <div class="lg:col-span-5">
-      <div class="relative rounded-card p-2 hairline border" style="background:var(--card)">
-        <div class="rounded-[6px] hairline border p-6 sm:p-8" style="background:var(--paper-2)">
-          <div class="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.14em] pb-4 mb-4 border-b rule" style="color:var(--muted)">
-            <span>Información Nutricional</span>
-            <span>Dosis: 30g</span>
-          </div>
-          <div class="space-y-0">
-            <div class="flex items-center justify-between py-2.5 border-b hairline"><span class="text-sm">Proteína</span><span class="font-mono font-bold text-sm tabular-nums">24 g</span></div>
-            <div class="flex items-center justify-between py-2.5 border-b hairline"><span class="text-sm">Carbohidratos</span><span class="font-mono font-bold text-sm tabular-nums">2.1 g</span></div>
-            <div class="flex items-center justify-between py-2.5 border-b hairline"><span class="text-sm">Grasas</span><span class="font-mono font-bold text-sm tabular-nums">1.0 g</span></div>
-            <div class="flex items-center justify-between py-3"><span class="text-sm font-bold">Calorías</span><span class="font-mono font-bold text-base tabular-nums">112 kcal</span></div>
-          </div>
-          <div class="mt-5 pt-5 border-t-[3px]" style="border-color:var(--line-strong)">
-            <div class="flex items-baseline justify-between">
-              <span class="font-display font-700 text-lg uppercase">Whey Isolate</span>
-              <span class="font-mono text-xs" style="color:var(--muted)">Vainilla · 2kg</span>
+      <div class="lg:col-span-5">
+        <div id="hero-card" class="relative rounded-card p-2 hairline border" style="background:var(--card); box-shadow:0 30px 60px -20px rgba(0,0,0,.55)">
+          <div class="rounded-[6px] hairline border p-6 sm:p-8" style="background:var(--paper-2)">
+            <div class="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.14em] pb-4 mb-4 border-b rule" style="color:var(--muted)">
+              <span>Información Nutricional</span>
+              <span>Dosis: 30g</span>
+            </div>
+            <div class="space-y-0">
+              <div class="flex items-center justify-between py-2.5 border-b hairline"><span class="text-sm">Proteína</span><span class="font-mono font-bold text-sm tabular-nums">24 g</span></div>
+              <div class="flex items-center justify-between py-2.5 border-b hairline"><span class="text-sm">Carbohidratos</span><span class="font-mono font-bold text-sm tabular-nums">2.1 g</span></div>
+              <div class="flex items-center justify-between py-2.5 border-b hairline"><span class="text-sm">Grasas</span><span class="font-mono font-bold text-sm tabular-nums">1.0 g</span></div>
+              <div class="flex items-center justify-between py-3"><span class="text-sm font-bold">Calorías</span><span class="font-mono font-bold text-base tabular-nums">112 kcal</span></div>
+            </div>
+            <div class="mt-5 pt-5 border-t-[3px]" style="border-color:var(--line-strong)">
+              <div class="flex items-baseline justify-between">
+                <span class="font-display font-700 text-lg uppercase">Whey Isolate</span>
+                <span class="font-mono text-xs" style="color:var(--muted)">Vainilla · 2kg</span>
+              </div>
             </div>
           </div>
         </div>
@@ -336,7 +362,7 @@
     <article class="p-card reveal pre rounded-card overflow-hidden flex flex-col" data-name="Iso Comabt Whey Isolate" data-price="84.90">
       <div class="p-media aspect-square" style="background:linear-gradient(150deg,var(--paper-2),var(--paper))">
         <span class="absolute top-3 left-3 z-10 font-mono text-[10px] uppercase tracking-[0.08em] font-bold px-2.5 py-1 rounded-full hairline border" style="background:var(--card); color:var(--ink-soft)">Proteínas</span>
-        <button class="absolute top-3 right-3 z-10 p-2 rounded-full hairline border" style="background:var(--card)" aria-label="Añadir a favoritos">
+        <button class="fav-btn absolute top-3 right-3 z-10 p-2 rounded-full hairline border" style="background:var(--card)" aria-label="Añadir a favoritos" aria-pressed="false">
           <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 17s-6-4.2-6-9a4 4 0 017-2.6A4 4 0 0118 8c0 4.8-6 9-6 9z" stroke="currentColor" stroke-width="1.5"/></svg>
         </button>
         <img class="p-glyph absolute inset-0 w-full h-full object-contain p-6" src="images/products/iso-whey.jpg" alt="Iso Comabt Whey Isolate" loading="lazy" width="640" height="640"/>
@@ -375,7 +401,7 @@
     <article class="p-card reveal pre rounded-card overflow-hidden flex flex-col" data-name="Creatina Monohidrato Beverly Creapure®" data-price="35.00">
       <div class="p-media aspect-square" style="background:linear-gradient(150deg,var(--paper-2),var(--paper))">
         <span class="absolute top-3 left-3 z-10 font-mono text-[10px] uppercase tracking-[0.08em] font-bold px-2.5 py-1 rounded-full hairline border" style="background:var(--card); color:var(--ink-soft)">Creatinas</span>
-        <button class="absolute top-3 right-3 z-10 p-2 rounded-full hairline border" style="background:var(--card)" aria-label="Añadir a favoritos">
+        <button class="fav-btn absolute top-3 right-3 z-10 p-2 rounded-full hairline border" style="background:var(--card)" aria-label="Añadir a favoritos" aria-pressed="false">
           <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 17s-6-4.2-6-9a4 4 0 017-2.6A4 4 0 0118 8c0 4.8-6 9-6 9z" stroke="currentColor" stroke-width="1.5"/></svg>
         </button>
         <img class="p-glyph absolute inset-0 w-full h-full object-contain p-6" src="images/products/creatina-beverly.jpg" alt="Creatina Monohidrato Beverly Creapure®" loading="lazy" width="640" height="640"/>
@@ -408,7 +434,7 @@
     <article class="p-card reveal pre rounded-card overflow-hidden flex flex-col" data-name="Pre-Entreno CellUp with Oxystorm" data-price="46.50">
       <div class="p-media aspect-square" style="background:linear-gradient(150deg,var(--paper-2),var(--paper))">
         <span class="absolute top-3 left-3 z-10 font-mono text-[10px] uppercase tracking-[0.08em] font-bold px-2.5 py-1 rounded-full hairline border" style="background:var(--card); color:var(--ink-soft)">Pre-Entrenos</span>
-        <button class="absolute top-3 right-3 z-10 p-2 rounded-full hairline border" style="background:var(--card)" aria-label="Añadir a favoritos">
+        <button class="fav-btn absolute top-3 right-3 z-10 p-2 rounded-full hairline border" style="background:var(--card)" aria-label="Añadir a favoritos" aria-pressed="false">
           <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 17s-6-4.2-6-9a4 4 0 017-2.6A4 4 0 0118 8c0 4.8-6 9-6 9z" stroke="currentColor" stroke-width="1.5"/></svg>
         </button>
         <img class="p-glyph absolute inset-0 w-full h-full object-contain p-6" src="images/products/pre-cellup.jpg" alt="Pre-Entreno CellUp with Oxystorm" loading="lazy" width="640" height="640"/>
@@ -446,7 +472,7 @@
     <article class="p-card reveal pre rounded-card overflow-hidden flex flex-col" data-name="Multivitamin Complete 90 Caps" data-price="20.90">
       <div class="p-media aspect-square" style="background:linear-gradient(150deg,var(--paper-2),var(--paper))">
         <span class="absolute top-3 left-3 z-10 font-mono text-[10px] uppercase tracking-[0.08em] font-bold px-2.5 py-1 rounded-full hairline border" style="background:var(--card); color:var(--ink-soft)">Salud & Bienestar</span>
-        <button class="absolute top-3 right-3 z-10 p-2 rounded-full hairline border" style="background:var(--card)" aria-label="Añadir a favoritos">
+        <button class="fav-btn absolute top-3 right-3 z-10 p-2 rounded-full hairline border" style="background:var(--card)" aria-label="Añadir a favoritos" aria-pressed="false">
           <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 17s-6-4.2-6-9a4 4 0 017-2.6A4 4 0 0118 8c0 4.8-6 9-6 9z" stroke="currentColor" stroke-width="1.5"/></svg>
         </button>
         <img class="p-glyph absolute inset-0 w-full h-full object-contain p-6" src="images/products/multivit.jpg" alt="Multivitamin Complete 90 Caps" loading="lazy" width="640" height="640"/>
@@ -479,7 +505,7 @@
     <article class="p-card reveal pre rounded-card overflow-hidden flex flex-col" data-name="Top Fat Burner" data-price="26.90">
       <div class="p-media aspect-square" style="background:linear-gradient(150deg,var(--paper-2),var(--paper))">
         <span class="absolute top-3 left-3 z-10 font-mono text-[10px] uppercase tracking-[0.08em] font-bold px-2.5 py-1 rounded-full hairline border" style="background:var(--card); color:var(--ink-soft)">Control de Peso</span>
-        <button class="absolute top-3 right-3 z-10 p-2 rounded-full hairline border" style="background:var(--card)" aria-label="Añadir a favoritos">
+        <button class="fav-btn absolute top-3 right-3 z-10 p-2 rounded-full hairline border" style="background:var(--card)" aria-label="Añadir a favoritos" aria-pressed="false">
           <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 17s-6-4.2-6-9a4 4 0 017-2.6A4 4 0 0118 8c0 4.8-6 9-6 9z" stroke="currentColor" stroke-width="1.5"/></svg>
         </button>
         <img class="p-glyph absolute inset-0 w-full h-full object-contain p-6" src="images/products/fatburner.jpg" alt="Top Fat Burner" loading="lazy" width="640" height="640"/>
@@ -512,7 +538,7 @@
     <article class="p-card reveal pre rounded-card overflow-hidden flex flex-col" data-name="Premium BCAA 8:1:1 + L-Glutamine" data-price="35.90">
       <div class="p-media aspect-square" style="background:linear-gradient(150deg,var(--paper-2),var(--paper))">
         <span class="absolute top-3 left-3 z-10 font-mono text-[10px] uppercase tracking-[0.08em] font-bold px-2.5 py-1 rounded-full hairline border" style="background:var(--card); color:var(--ink-soft)">Aminoácidos</span>
-        <button class="absolute top-3 right-3 z-10 p-2 rounded-full hairline border" style="background:var(--card)" aria-label="Añadir a favoritos">
+        <button class="fav-btn absolute top-3 right-3 z-10 p-2 rounded-full hairline border" style="background:var(--card)" aria-label="Añadir a favoritos" aria-pressed="false">
           <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 17s-6-4.2-6-9a4 4 0 017-2.6A4 4 0 0118 8c0 4.8-6 9-6 9z" stroke="currentColor" stroke-width="1.5"/></svg>
         </button>
         <img class="p-glyph absolute inset-0 w-full h-full object-contain p-6" src="images/products/bcaa.jpg" alt="Premium BCAA 8:1:1 + L-Glutamine" loading="lazy" width="640" height="640"/>
@@ -551,7 +577,7 @@
     <article class="p-card reveal pre rounded-card overflow-hidden flex flex-col" data-name="Vegefit Protein 720gr" data-price="29.90">
       <div class="p-media aspect-square" style="background:linear-gradient(150deg,var(--paper-2),var(--paper))">
         <span class="absolute top-3 left-3 z-10 font-mono text-[10px] uppercase tracking-[0.08em] font-bold px-2.5 py-1 rounded-full hairline border" style="background:var(--card); color:var(--ink-soft)">Proteínas</span>
-        <button class="absolute top-3 right-3 z-10 p-2 rounded-full hairline border" style="background:var(--card)" aria-label="Añadir a favoritos">
+        <button class="fav-btn absolute top-3 right-3 z-10 p-2 rounded-full hairline border" style="background:var(--card)" aria-label="Añadir a favoritos" aria-pressed="false">
           <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 17s-6-4.2-6-9a4 4 0 017-2.6A4 4 0 0118 8c0 4.8-6 9-6 9z" stroke="currentColor" stroke-width="1.5"/></svg>
         </button>
         <img class="p-glyph absolute inset-0 w-full h-full object-contain p-6" src="images/products/vegefit.jpg" alt="Vegefit Protein 720gr" loading="lazy" width="640" height="640"/>
@@ -591,7 +617,7 @@
     <article class="p-card reveal pre rounded-card overflow-hidden flex flex-col" data-name="Pure Creatine Caps 3000" data-price="22.90">
       <div class="p-media aspect-square" style="background:linear-gradient(150deg,var(--paper-2),var(--paper))">
         <span class="absolute top-3 left-3 z-10 font-mono text-[10px] uppercase tracking-[0.08em] font-bold px-2.5 py-1 rounded-full hairline border" style="background:var(--card); color:var(--ink-soft)">Creatinas</span>
-        <button class="absolute top-3 right-3 z-10 p-2 rounded-full hairline border" style="background:var(--card)" aria-label="Añadir a favoritos">
+        <button class="fav-btn absolute top-3 right-3 z-10 p-2 rounded-full hairline border" style="background:var(--card)" aria-label="Añadir a favoritos" aria-pressed="false">
           <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 17s-6-4.2-6-9a4 4 0 017-2.6A4 4 0 0118 8c0 4.8-6 9-6 9z" stroke="currentColor" stroke-width="1.5"/></svg>
         </button>
         <img class="p-glyph absolute inset-0 w-full h-full object-contain p-6" src="images/products/purecreatine.jpg" alt="Pure Creatine Caps 3000" loading="lazy" width="640" height="640"/>
@@ -773,13 +799,31 @@
   });
 
   var nav = document.getElementById('site-nav');
+  var heroBg = document.getElementById('hero-bg');
+  var heroSection = heroBg ? heroBg.closest('section') : null;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var lastY = window.scrollY;
-  window.addEventListener('scroll', function(){
+  var ticking = false;
+
+  function onScroll(){
     var y = window.scrollY;
     nav.classList.toggle('blurred', y > 8);
     if(y > lastY && y > 120){ nav.classList.add('hide'); }
     else{ nav.classList.remove('hide'); }
     lastY = y;
+
+    if(heroBg && heroSection && !reduceMotion){
+      var rect = heroSection.getBoundingClientRect();
+      if(rect.bottom > 0 && rect.top < window.innerHeight){
+        var shift = Math.min(y * 0.15, 120);
+        heroBg.style.transform = 'translateY(' + shift + 'px)';
+      }
+    }
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', function(){
+    if(!ticking){ requestAnimationFrame(onScroll); ticking = true; }
   }, { passive:true });
 
   document.querySelectorAll('.reveal.pre').forEach(function(el){
@@ -789,6 +833,29 @@
       });
     }, { threshold:0.15 });
     io.observe(el);
+  });
+
+  var favs = [];
+  try{ favs = JSON.parse(localStorage.getItem('sfn-favs') || '[]'); }catch(e){}
+  function saveFavs(){ try{ localStorage.setItem('sfn-favs', JSON.stringify(favs)); }catch(e){} }
+
+  document.querySelectorAll('.fav-btn').forEach(function(btn){
+    var card = btn.closest('article');
+    var name = card ? card.dataset.name : '';
+    if(favs.indexOf(name) !== -1){ btn.setAttribute('aria-pressed', 'true'); }
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      var pressed = btn.getAttribute('aria-pressed') === 'true';
+      btn.setAttribute('aria-pressed', pressed ? 'false' : 'true');
+      var idx = favs.indexOf(name);
+      if(pressed && idx !== -1){ favs.splice(idx, 1); }
+      else if(!pressed && idx === -1){ favs.push(name); }
+      saveFavs();
+      btn.classList.remove('pulse');
+      void btn.offsetWidth;
+      btn.classList.add('pulse');
+    });
   });
 
   document.querySelectorAll('[role="radiogroup"]').forEach(function(group){
