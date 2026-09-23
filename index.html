@@ -678,7 +678,7 @@
     <div class="grid lg:grid-cols-2 gap-5 lg:gap-6">
 
       <!-- Asesoría deportiva -->
-      <div class="reveal pre rounded-card overflow-hidden flex flex-col hairline border" style="background:var(--ink); color:var(--paper)">
+      <div class="reveal pre rounded-card overflow-hidden flex flex-col hairline border" style="background:#0B0B0C; color:#FFFFFF; border-color:rgba(255,255,255,.14)">
         <div class="p-7 sm:p-9 flex flex-col gap-5 flex-1">
           <div class="flex items-start justify-between gap-4">
             <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M4 10l1-6h14l1 6M4 10a2 2 0 002 2 2 2 0 002-2 2 2 0 002 2 2 2 0 002-2 2 2 0 002 2 2 2 0 002-2M5 12v8h14v-8" stroke="var(--volt)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>
@@ -942,6 +942,21 @@
   var productCards = document.querySelectorAll('#product-grid > article');
   var gridEmpty = document.getElementById('grid-empty');
 
+  function setCardVisible(card, visible){
+    if(visible){
+      window.clearTimeout(card._hideTimer);
+      card.style.display = '';
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){ card.classList.remove('filtered-out'); });
+      });
+    } else {
+      card.classList.add('filtered-out');
+      card._hideTimer = window.setTimeout(function(){
+        if(card.classList.contains('filtered-out')){ card.style.display = 'none'; }
+      }, 350);
+    }
+  }
+
   catPills.forEach(function(pill){
     pill.addEventListener('click', function(){
       catPills.forEach(function(p){ p.setAttribute('aria-pressed', 'false'); });
@@ -951,7 +966,7 @@
       var visibleCount = 0;
       productCards.forEach(function(card){
         var match = filter === 'all' || card.dataset.cat === filter;
-        card.classList.toggle('filtered-out', !match);
+        setCardVisible(card, match);
         if(match) visibleCount++;
       });
       gridEmpty.classList.toggle('hidden', visibleCount > 0);
