@@ -153,7 +153,9 @@
   #cart-count{ transition:transform .3s cubic-bezier(.16,1,.3,1); }
   #cart-count.bump{ transform:scale(1.35); }
 
-  .map-frame{ filter:grayscale(1) contrast(1.12) brightness(.92); }
+  .map-embed{ position:relative; width:100%; aspect-ratio:4/3; border:1px solid rgba(255,255,255,.18); background:#1a1a1b; overflow:hidden; }
+  .map-embed iframe{ width:100%; height:100%; border:0; display:block; filter:grayscale(1) contrast(1.05); transition:filter .4s ease; }
+  .map-embed:hover iframe, .map-embed:focus-within iframe{ filter:none; }
   .trust-icon{ transition:transform .4s cubic-bezier(.16,1,.3,1); }
   .trust-item:hover .trust-icon{ transform:translateY(-3px); }
 
@@ -277,13 +279,14 @@
             <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
           <a href="#asesoria" class="btn-ghost-on-dark font-mono text-[12px] uppercase tracking-[0.1em] font-bold px-7 py-4 rounded-full inline-flex items-center gap-2">
-            Asesoramiento Nutricional
+            Asesoría en Tienda
           </a>
         </div>
 
         <div class="mt-10 flex flex-wrap gap-x-8 gap-y-3 font-mono text-[11px] uppercase tracking-[0.08em]" style="color:rgba(255,255,255,.78)">
           <span class="flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M3 10l5 5L17 5" stroke="var(--volt)" stroke-width="2.5" stroke-linecap="square"/></svg>Testado en laboratorio</span>
           <span class="flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M3 10l5 5L17 5" stroke="var(--volt)" stroke-width="2.5" stroke-linecap="square"/></svg>Envío en 24–48h</span>
+          <span class="flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M3 10l5 5L17 5" stroke="var(--volt)" stroke-width="2.5" stroke-linecap="square"/></svg>Asesoría en tienda vía WhatsApp</span>
           <span class="flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M3 10l5 5L17 5" stroke="var(--volt)" stroke-width="2.5" stroke-linecap="square"/></svg>+15.000 reseñas verificadas</span>
         </div>
     </div>
@@ -684,18 +687,18 @@
       <div class="reveal pre rounded-card overflow-hidden flex flex-col hairline border" style="background:var(--ink); color:var(--paper)">
         <div class="p-7 sm:p-9 flex flex-col gap-5 flex-1">
           <div class="flex items-start justify-between gap-4">
-            <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 1116 0v5a2 2 0 01-2 2h-1v-6h3M4 12v5a2 2 0 002 2h1v-6H4" stroke="var(--volt)" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M4 10l1-6h14l1 6M4 10a2 2 0 002 2 2 2 0 002-2 2 2 0 002 2 2 2 0 002-2 2 2 0 002 2 2 2 0 002-2M5 12v8h14v-8" stroke="var(--volt)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>
             <span class="font-mono text-[10px] uppercase tracking-[0.1em] font-bold px-3 py-1.5 rounded-full" style="background:var(--volt); color:var(--volt-ink)">10€ / sesión</span>
           </div>
           <div>
-            <h3 class="font-display font-700 text-2xl uppercase leading-tight">Asesoría Deportiva Personalizada</h3>
-            <p class="mt-3 text-sm leading-relaxed" style="color:rgba(255,255,255,.72)">Una llamada de 30 minutos con nuestro equipo para resolver dudas sobre dosis, combinaciones y qué encaja con tus objetivos — antes de gastar en algo que no te sirve.</p>
+            <h3 class="font-display font-700 text-2xl uppercase leading-tight">Asesoría Deportiva en Tienda</h3>
+            <p class="mt-3 text-sm leading-relaxed" style="color:rgba(255,255,255,.72)">Pásate por nuestra tienda de Terrassa y te asesoramos en persona sobre dosis, combinaciones y qué encaja con tus objetivos. Escríbenos por WhatsApp para concretar día y hora.</p>
           </div>
-          <a href="https://wa.me/34673407973?text=Hola%2C%20quiero%20reservar%20una%20asesor%C3%ADa%20deportiva" target="_blank" rel="noopener" class="btn-volt mt-auto rounded-full py-3.5 font-mono text-[11px] uppercase tracking-[0.08em] font-bold flex items-center justify-center gap-2">
-            Reservar por WhatsApp
+          <a href="https://wa.me/34673407973?text=Hola%2C%20quiero%20concretar%20una%20asesor%C3%ADa%20deportiva%20en%20tienda" target="_blank" rel="noopener" class="btn-volt mt-auto rounded-full py-3.5 font-mono text-[11px] uppercase tracking-[0.08em] font-bold flex items-center justify-center gap-2">
+            Concretar por WhatsApp
             <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
-          <p class="font-mono text-[10px] uppercase tracking-[0.06em] text-center" style="color:rgba(255,255,255,.5)">o llama al 930 25 09 27</p>
+          <p class="font-mono text-[10px] uppercase tracking-[0.06em] text-center" style="color:rgba(255,255,255,.5)">Av. de l'Abat Marcet, 217 — Terrassa</p>
         </div>
       </div>
 
@@ -730,7 +733,7 @@
 <!-- ====================== FOOTER ====================== -->
 <footer id="footer" style="background:var(--ink); color:var(--paper)">
   <div class="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-6 pb-12 border-b border-white/15">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-6 pb-12 border-b border-white/15">
       <div class="lg:col-span-2">
         <a href="#top" class="flex items-center gap-2.5">
           <img src="images/logo.png" alt="Sport Fitness Nutrition" class="h-12 w-12 object-contain" width="120" height="104"/>
@@ -761,31 +764,29 @@
           <li><a href="https://sportfitnessnutrition.com/pages/contact" target="_blank" rel="noopener">Contacto</a></li>
         </ul>
       </div>
-      <div>
-        <div class="font-mono text-[10px] uppercase tracking-[0.12em] opacity-60 mb-4">Visítanos</div>
-        <ul class="space-y-2.5 text-sm" style="opacity:.85">
-          <li>Av. de l'Abat Marcet, 217<br/>08225 Terrassa, Barcelona</li>
-          <li>L–V 10:00–14:00 y 17:00–20:00</li>
-          <li>Sáb 10:00–13:30</li>
-          <li class="pt-1"><a href="https://www.google.com/maps/search/?api=1&query=Av.+de+l%27Abat+Marcet+217+Terrassa+Barcelona" target="_blank" rel="noopener" class="underline underline-offset-2" style="color:var(--volt)">Cómo llegar ↗</a></li>
-        </ul>
-      </div>
     </div>
 
-    <!-- ---- Encuéntranos: b/w map ---- -->
-    <div class="py-10 border-b border-white/15">
-      <div class="font-mono text-[10px] uppercase tracking-[0.12em] opacity-60 mb-4">Encuéntranos en Terrassa</div>
-      <div class="relative rounded-card overflow-hidden hairline border" style="border-color:rgba(255,255,255,.18); height:260px;">
-        <iframe
-          src="https://www.openstreetmap.org/export/embed.html?bbox=2.0036%2C41.5707%2C2.0156%2C41.5787&amp;layer=mapnik&amp;marker=41.5747%2C2.0096"
-          class="map-frame w-full h-full"
-          style="border:0;"
-          loading="lazy"
-          title="Mapa de Sport Fitness Nutrition en Terrassa, Barcelona"
-          aria-label="Ubicación de la tienda física en Av. de l'Abat Marcet 217, Terrassa"></iframe>
-        <div class="pointer-events-none absolute inset-0" style="background:linear-gradient(to top, rgba(11,11,12,.35), transparent 40%)"></div>
-        <div class="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-full">
-          <svg width="26" height="34" viewBox="0 0 26 34" fill="none"><path d="M13 1C6.4 1 1 6.4 1 13c0 9 12 20 12 20s12-11 12-20C25 6.4 19.6 1 13 1z" fill="var(--volt)" stroke="#0B0B0C" stroke-width="1.5"/><circle cx="13" cy="13" r="4.5" fill="#0B0B0C"/></svg>
+    <!-- ---- Visítanos: minimalist map + address ---- -->
+    <div class="py-12 lg:py-14 border-b border-white/15">
+      <div class="font-mono text-[10px] uppercase tracking-[0.12em] opacity-60 mb-6">Visítanos</div>
+      <div class="grid lg:grid-cols-[1.3fr_.8fr] gap-10 lg:gap-14 items-start">
+        <div class="map-embed">
+          <iframe
+            src="https://www.google.com/maps?q=Av.+de+l%27Abat+Marcet%2C+217%2C+08225+Terrassa%2C+Barcelona&output=embed"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Mapa de Sport Fitness Nutrition — Av. de l'Abat Marcet 217, Terrassa"></iframe>
+        </div>
+        <div class="flex flex-col">
+          <a href="https://www.google.com/maps/search/?api=1&query=Av.+de+l%27Abat+Marcet+217+Terrassa+Barcelona" target="_blank" rel="noopener" class="flex items-start gap-3 mb-5">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="shrink-0 mt-0.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0Z" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="1.4"/></svg>
+            <span class="text-sm leading-relaxed" style="opacity:.85">Av. de l'Abat Marcet, 217<br/>08225 Terrassa, Barcelona</span>
+          </a>
+          <p class="text-sm leading-relaxed mb-6" style="opacity:.7">L–V 10:00–14:00 y 17:00–20:00<br/>Sáb 10:00–13:30</p>
+          <a href="https://www.google.com/maps/search/?api=1&query=Av.+de+l%27Abat+Marcet+217+Terrassa+Barcelona" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 self-start font-mono text-[11px] uppercase tracking-[0.08em] font-bold pb-1 border-b" style="border-color:var(--paper)">
+            Ver en Google Maps
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
         </div>
       </div>
     </div>
